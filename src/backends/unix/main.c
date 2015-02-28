@@ -43,6 +43,47 @@
 #endif /*SDL2 */
 #endif
 
+#ifdef __APPLE__
+#include <limits.h>
+#include <mach-o/dyld.h>
+
+void SetWorkingDirectory(void)
+{
+	char *path = NULL;
+	uint32_t size = PATH_MAX;
+
+	char path1[size];
+	memset(path1, 0, size);
+
+	if (0 == _NSGetExecutablePath(path1, &size))
+	{
+		path = path1;
+	}
+	else
+	{
+		char path2[size];
+		memset(path2, 0, size);
+
+		if (0 == _NSGetExecutablePath(path2, &size))
+		{
+			path = path2;
+		}
+	}
+
+	if (NULL != path)
+	{
+		char *slashptr = strrchr(path, '/');
+
+		if (NULL != slashptr)
+		{
+			*slashptr = '\0';
+
+			chdir(path);
+		}
+	}
+}
+#endif /* __APPLE__ */
+
 int
 main(int argc, char **argv)
 {
@@ -115,6 +156,10 @@ main(int argc, char **argv)
 
 	/* Seed PRNG */
 	randk_seed();
+
+#ifdef __APPLE__
+	SetWorkingDirectory();
+#endif
 
 	/* Initialze the game */
 	Qcommon_Init(argc, argv);
