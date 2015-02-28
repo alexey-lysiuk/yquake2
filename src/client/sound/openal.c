@@ -532,6 +532,7 @@ AL_UnqueueRawSamples()
 
 void oal_update_underwater()
 {
+#if !defined (__APPLE__)
     int i;
     float gain_hf;
     qboolean update = false;
@@ -571,6 +572,7 @@ void oal_update_underwater()
 
     for (i = 0; i < s_numchannels; ++i)
         qalSourcei(s_srcnums[i], AL_DIRECT_FILTER, filter);
+#endif
 }
 
 /*
