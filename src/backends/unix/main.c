@@ -34,8 +34,13 @@
 #include "../../common/header/common.h"
 #include "header/unix.h"
 
+/* There's no sdl-config on OS X and Windows */
 #if defined(__APPLE__) && !defined(DEDICATED_ONLY)
+#ifdef SDL2
+#include <SDL2/SDL.h>
+#else /* SDL1.2 */
 #include <SDL/SDL.h>
+#endif /*SDL2 */
 #endif
 
 int
